@@ -15,7 +15,7 @@ mainDiv.addEventListener('click', async (e) => {
     });
 
     const result = await response.json();
-    console.log("====>>>>", result);
+    console.log('====>>>>', result);
     if (result.posts === 'OK') {
       allPosts.insertAdjacentHTML(
         'afterbegin',
@@ -25,9 +25,9 @@ mainDiv.addEventListener('click', async (e) => {
                <p>${result.post}</p>
                <p>Дата создания: ${result.time}</p>
               <div>
-      <button id="${result.id}" type="submit" name="update-like" className="heart" disabled="${result.userName}">❤</button>
+                  <button id="${result.id}" type="submit" name="update-like" className="heart">❤</button>
                   <p id="post-like-${result.id}" className="heartValue" name="liked">
-                  ${result.like} лайков 
+                    ${result.like} лайков 
                   </p>
                 </>
             </div>

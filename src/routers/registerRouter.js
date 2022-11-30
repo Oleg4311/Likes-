@@ -1,4 +1,4 @@
-const express = require('express');
+// const express = require('express');
 const bcrypt = require('bcrypt');
 const router = require('express').Router();
 const renderTemplate = require('../lib/renderTemplate');
@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const findUser = await User.findOne({ where: { email } });
     if (!findUser) {
-      const newUser = await User.create({
+      await User.create({
         name, password: hashedPassword, email, passwordAgain,
       });
       // req.session.username = newUser.name;

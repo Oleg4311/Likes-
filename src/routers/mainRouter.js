@@ -3,16 +3,13 @@ const express = require('express');
 const router = express.Router();
 const renderTemplate = require('../lib/renderTemplate');
 const Main = require('../views/Main');
-const { User, Post, Like } = require('../../db/models');
+const { Post, Like } = require('../../db/models');
 
 router.get('/', async (req, res) => {
   try {
     const userName = req.session?.username;
     const userId = req.session.user?.id;
-    const allPosts = await Post.findAll({ where: {}, order: [['createdAt', 'DESC']] }, { raw: true });
-    // const likedPosts = await Post.findAll({ where: {} }, { raw: true });
-    // console.log('allPosts', allPosts);
-    // console.log('likedPosts', likedPosts);
+    const allPosts = await Post.findAll({ where: {}, order: [['createdAt', 'DESC']] });
     const likes = await Like.findAll();
     renderTemplate(Main, {
       userName, allPosts, likes, userId,
@@ -39,9 +36,9 @@ router.post('/', async (req, res) => {
       res.json({
         url, post, id, userName, time, like, posts: 'OK',
       });
-    } else {
-      res.redirect('/');
-    }
+    }// else {
+    //   res.redirect('/');
+    // }
   } catch (error) {
     console.log('Error ==>', error);
   }
@@ -51,7 +48,7 @@ router.post('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.session?.user.id;
-    const addLike = await Like.create({ userId, postId: id });
+    await Like.create({ userId, postId: id });
     const likes1 = await Like.findAll({ where: { postId: id } });
     const likes2 = likes1.length;
     res.json({ likes: likes2, id });

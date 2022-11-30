@@ -1,15 +1,22 @@
+/* eslint-disable max-len */
+/* eslint-disable jsx-a11y/img-redundant-alt */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable react/prop-types */
 const React = require('react');
 const Layout = require('./Layout');
 
 module.exports = function Main({
   userName, allPosts, likes, userId,
 }) {
-  const filterLikes = allPosts.filter((post) => post.dataValues.userId === userId);
+  const newLikes = likes.map((like) => ({ userId: like.dataValues.userId, postId: like.dataValues.postId }));
   const likeOrNot = allPosts.map((post) => {
-    if (filterLikes.includes(post)) return false;
-    return true;
+    const postLikes = newLikes.filter((like) => like.postId === post.dataValues.id);
+    if (postLikes.some((like) => like.userId === userId)) return true;
+    return false;
   });
-  console.log('likeornot', likes);
+
+  console.log('likeornot==============', likeOrNot);
+
   return (
     <Layout userName={userName}>
       <script defer src="/js/addPost.js" />
@@ -62,7 +69,7 @@ module.exports = function Main({
               </p>
               {userName ? (
                 <div>
-                  <button id={`${post.id}`} type="submit" name="update-like" className="heart" disabled={likes.find((elt) => elt.dataValues.userId === userId && elt.dataValues.postId === post.postId)}>❤</button>
+                  <button id={`${post.id}`} type="submit" name="update-like" className="heart" disabled={likeOrNot[idx]}>❤</button>
                   <p id={`post-like-${post.id}`} className="heartValue" name="liked">
                     {(likes.filter((elt) => elt.dataValues.postId === post.id)).length}
                     {' '}
